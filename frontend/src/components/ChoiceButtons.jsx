@@ -1,3 +1,5 @@
+import "../styles/components/choice-buttons.css";
+
 export default function ChoiceButtons({
   choices = [],
   selectedChoice = null,
@@ -20,6 +22,7 @@ export default function ChoiceButtons({
             }`}
             onClick={() => onSelect?.(choice.index)}
             disabled={loading}
+            aria-pressed={selectedChoice === choice.index}
           >
             <span className="choice-index">
               {String(choice.index + 1).padStart(2, "0")}

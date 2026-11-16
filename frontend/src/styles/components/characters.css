@@ -1,0 +1,126 @@
+.character-list {
+  margin-top: var(--space-lg);
+}
+
+.character-list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.character-count {
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+.character-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.character-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.character-card-header {
+  width: 100%;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.character-card-header:hover {
+  background: var(--accent-subtle);
+}
+
+.character-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.character-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.character-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.character-toggle {
+  font-size: 1.2rem;
+  color: var(--accent-primary);
+}
+
+.character-details {
+  padding: 14px;
+  border-top: 1px solid var(--border-primary);
+}
+
+.character-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.trait-tag {
+  padding: 4px 8px;
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+}
+
+.character-backstory,
+.character-empty {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.character-edit-field {
+  margin-bottom: 16px;
+}
+
+.character-edit-field:last-child {
+  margin-bottom: 0;
+}
+
+.character-edit-field .detail-label {
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.character-edit-field .character-traits {
+  margin-bottom: 8px;
+}
+
+/* Studio workspace polish */
+.character-list { margin-top: var(--space-xl); }
+.character-card-header { min-height: 76px; padding: 16px; border-radius: 0; }
+.character-card-header:focus-visible { outline-offset: -3px; }
+.character-card:has([aria-expanded="true"]) { border-color: var(--border-secondary); }
+.character-name { line-height: 1.5; overflow-wrap: anywhere; }
+.character-role { line-height: 1.5; }
+.character-details { padding: 18px 16px; }
+.character-edit-field { margin-bottom: var(--space-md); font-size: 0.85rem; line-height: 1.7; }
+.character-edit-field .character-traits { margin-bottom: 0; }
+.trait-tag { font-size: 0.72rem; border: 1px solid var(--border-secondary); color: var(--text-secondary); background: transparent; }
+.character-count { border-radius: var(--radius-sm); font-variant-numeric: tabular-nums; }

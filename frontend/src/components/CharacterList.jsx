@@ -1,6 +1,11 @@
+import WorkspaceState from "./WorkspaceState";
 import CharacterCard from "./CharacterCard";
+import "../styles/components/characters.css";
 
-export default function CharacterList({ characters = [] }) {
+export default function CharacterList({
+  characters = [],
+  onCharacterUpdate
+}) {
   return (
     <section className="character-list">
       <div className="character-list-heading">
@@ -9,13 +14,18 @@ export default function CharacterList({ characters = [] }) {
       </div>
 
       {characters.length === 0 ? (
-        <p className="character-empty">
-          No characters generated yet.
-        </p>
+        <WorkspaceState
+          title="No characters yet"
+          description="Generate characters to begin populating your game world."
+        />
       ) : (
         <div className="character-cards">
           {characters.map((character) => (
-            <CharacterCard key={character.id} character={character} />
+            <CharacterCard
+              key={character.id}
+              character={character}
+              onUpdate={onCharacterUpdate}
+            />
           ))}
         </div>
       )}
