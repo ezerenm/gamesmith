@@ -103,3 +103,18 @@ select:focus {
   background: var(--accent-primary);
   color: var(--bg-primary);
 }
+
+/* Shared panel labels */
+.panel-label {
+  color: var(--accent-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+/* Studio workspace polish */
+/* Shared keyboard and reading defaults */
+:where(button, a, input, textarea, select):focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 3px; }
+textarea { resize: vertical; }
+.detail-label { color: var(--text-muted); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }

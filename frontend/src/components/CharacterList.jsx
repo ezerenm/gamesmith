@@ -1,6 +1,10 @@
 import CharacterCard from "./CharacterCard";
+import "../styles/components/characters.css";
 
-export default function CharacterList({ characters = [] }) {
+export default function CharacterList({
+  characters = [],
+  onCharacterUpdate
+}) {
   return (
     <section className="character-list">
       <div className="character-list-heading">
@@ -15,7 +19,11 @@ export default function CharacterList({ characters = [] }) {
       ) : (
         <div className="character-cards">
           {characters.map((character) => (
-            <CharacterCard key={character.id} character={character} />
+            <CharacterCard
+              key={character.id}
+              character={character}
+              onUpdate={onCharacterUpdate}
+            />
           ))}
         </div>
       )}

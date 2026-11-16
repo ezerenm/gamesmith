@@ -1,3 +1,5 @@
+import "../styles/components/scene-history.css";
+
 export default function SceneHistory({
   scenes = [],
   currentSceneId,
@@ -14,6 +16,7 @@ export default function SceneHistory({
           <button
             key={scene.id}
             type="button"
+            aria-label={`Go to scene ${scene.id}`}
             className={`history-item ${
               scene.id === currentSceneId ? "active" : ""
             }`}

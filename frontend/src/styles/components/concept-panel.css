@@ -1,0 +1,56 @@
+.concept-panel {
+  padding: var(--space-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+}
+
+.panel-heading {
+  margin-bottom: var(--space-md);
+}
+
+.concept-title {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  margin-bottom: var(--space-sm);
+}
+
+.concept-premise {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.concept-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-primary);
+}
+
+.concept-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-value {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Studio workspace polish */
+.concept-panel { padding: 0 0 var(--space-lg); background: transparent; border: 0; border-bottom: 1px solid var(--border-primary); border-radius: 0; }
+.concept-title { font-family: var(--font-story); font-size: 1.45rem; font-weight: 500; overflow-wrap: anywhere; }
+.concept-details { gap: 18px; }
+.concept-detail { gap: 7px; }
+/* Reserve a consistent control column while allowing content to wrap. */
+.concept-panel .editable-display {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-sm);
+}

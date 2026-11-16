@@ -1,4 +1,7 @@
-export default function SceneView({ scene }) {
+import EditableText from "./EditableText";
+import "../styles/components/scene-view.css";
+
+export default function SceneView({ scene, onUpdate }) {
   if (!scene) {
     return (
       <article className="parchment-panel scene-view">
@@ -18,8 +21,20 @@ export default function SceneView({ scene }) {
       </div>
 
       <div className="scene-content">
-        <h2 className="scene-title">The Story Continues</h2>
-        <p className="scene-text">{scene.text}</p>
+        <h2 className="scene-title">
+          {typeof scene.title === "string" && scene.title.trim()
+            ? scene.title.trim()
+            : `Scene ${scene.id}`}
+        </h2>
+
+        <div className="scene-text">
+          <EditableText
+            value={scene.text}
+            multiline
+            label="Edit scene narrative"
+            onSave={(value) => onUpdate?.(scene.id, { text: value })}
+          />
+        </div>
       </div>
     </article>
   );

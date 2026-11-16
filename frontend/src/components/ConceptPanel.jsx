@@ -1,5 +1,7 @@
+import EditableText from "./EditableText";
+import "../styles/components/concept-panel.css";
 
-export default function ConceptPanel({ project }) {
+export default function ConceptPanel({ project, onUpdate }) {
   if (!project) return null;
 
   return (
@@ -8,28 +10,28 @@ export default function ConceptPanel({ project }) {
         <span className="panel-label">YOUR CONCEPT</span>
       </div>
 
-      <h2 className="concept-title">
-        {project.title || "Untitled Project"}
-      </h2>
+      <div className="concept-title" role="heading" aria-level={2}>
+        <EditableText value={project.title} placeholder="Untitled Project" label="Edit project title" onSave={(value) => onUpdate?.({ title: value })} />
+      </div>
 
-      <p className="concept-premise">
-        {project.premise || "Generate a concept to get started."}
-      </p>
+      <div className="concept-premise">
+        <EditableText value={project.premise} multiline placeholder="Generate a concept to get started." label="Edit project premise" onSave={(value) => onUpdate?.({ premise: value })} />
+      </div>
 
       <div className="concept-details">
         <div className="concept-detail">
           <span className="detail-label">Genre</span>
-          <span className="detail-value">{project.genre || "—"}</span>
+          <div className="detail-value"><EditableText value={project.genre} label="Edit project genre" onSave={(value) => onUpdate?.({ genre: value })} /></div>
         </div>
 
         <div className="concept-detail">
           <span className="detail-label">Tone</span>
-          <span className="detail-value">{project.tone || "—"}</span>
+          <div className="detail-value"><EditableText value={project.tone} label="Edit project tone" onSave={(value) => onUpdate?.({ tone: value })} /></div>
         </div>
 
         <div className="concept-detail">
           <span className="detail-label">Setting</span>
-          <span className="detail-value">{project.setting || "—"}</span>
+          <div className="detail-value"><EditableText value={project.setting} label="Edit project setting" onSave={(value) => onUpdate?.({ setting: value })} /></div>
         </div>
       </div>
     </section>

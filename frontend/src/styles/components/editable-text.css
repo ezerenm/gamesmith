@@ -1,0 +1,91 @@
+.editable-text {
+  width: 100%;
+  min-width: 0;
+}
+
+.editable-display {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.editable-display > span {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.edit-button {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.edit-button:hover {
+  opacity: 1;
+}
+
+.editable-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font: inherit;
+  line-height: 1.5;
+}
+
+.editable-input:focus {
+  outline: 2px solid var(--accent-subtle);
+  outline-offset: 2px;
+}
+
+.editable-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.editable-save,
+.editable-cancel {
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.editable-save {
+  background: var(--accent-primary);
+  color: #201912;
+  border: none;
+}
+
+.editable-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editable-cancel {
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+}
+
+/* Studio workspace polish */
+.edit-button { min-height: 36px; min-width: 44px; padding: 6px 8px; border: 1px solid transparent; opacity: 1; font: 500 0.72rem var(--font-primary); }
+.edit-button:hover:not(:disabled) { background: var(--accent-subtle); border-color: var(--border-secondary); }
+.editable-input { padding: 12px; line-height: 1.6; }
+.editable-input:focus { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+.editable-actions { flex-wrap: wrap; margin-top: 12px; }
+.editable-save, .editable-cancel { min-height: 40px; padding: 8px 16px; font: 500 0.78rem var(--font-primary); }
+.editable-save:hover:not(:disabled) { background: var(--accent-hover); }
+.editable-cancel:hover { color: var(--text-primary); background: var(--bg-tertiary); }

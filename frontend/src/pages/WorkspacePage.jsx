@@ -4,77 +4,103 @@ import TopBar from "../components/TopBar";
 import ConceptPanel from "../components/ConceptPanel";
 import CharacterList from "../components/CharacterList";
 import SceneView from "../components/SceneView";
-import ChoiceButtons from "../components/ChoiceButtons";
 import SceneHistory from "../components/SceneHistory";
+import ChoiceButtons from "../components/ChoiceButtons";
 
 import { mockWorkspace } from "../api/mockData";
-import "../styles/workspace.css";
+import "../styles/layout/workspace.css";
+
 
 export default function WorkspacePage() {
-  const { project, characters, scenes } = mockWorkspace;
+  // Mock project data
+  const [project, setProject] = useState(() => ({
+    ...mockWorkspace.project
+  }));
 
+  // Mock character data
+  const [characters, setCharacters] = useState(() =>
+    mockWorkspace.characters.map((character) => ({
+      ...character,
+      traits: [...character.traits]
+    }))
+  );
+
+  // Mock scene data
+  const [scenes, setScenes] = useState(() =>
+    mockWorkspace.scenes.map((scene) => ({
+      ...scene,
+      choices: scene.choices.map((choice) => ({ ...choice }))
+    }))
+  );
+
+  // Track which scene the user is viewing
   const [currentSceneId, setCurrentSceneId] = useState(
-    project.current_scene_id
+    mockWorkspace.project.current_scene_id
   );
 
-  // Tracks the furthest scene on the active branch.
-  const [activeBranchEndId, setActiveBranchEndId] = useState(
-    project.current_scene_id
-  );
-
+  // Track mock choice selections
   const [selectedChoices, setSelectedChoices] = useState({});
 
+  // Find the currently displayed scene
   const currentScene = scenes.find(
     (scene) => scene.id === currentSceneId
   );
 
-  // Build history from the active branch's endpoint,
-  // not the scene currently being viewed.
-  const scenePath = [];
+  // Get the selected choice for the current scene
+  const selectedChoice =
+    selectedChoices[currentSceneId] ??
+    currentScene?.selected_choice ??
+    null;
 
-  let scene = scenes.find(
-    (scene) => scene.id === activeBranchEndId
-  );
+  // Update project information
+  function handleProjectUpdate(changes) {
+    setProject((previous) => ({
+      ...previous,
+      ...changes
+    }));
+  }
 
-  while (scene) {
-    scenePath.unshift(scene);
-
-    scene = scenes.find(
-      (candidate) => candidate.id === scene.parent_scene_id
+  // Update a specific character
+  function handleCharacterUpdate(characterId, changes) {
+    setCharacters((previous) =>
+      previous.map((character) =>
+        character.id === characterId
+          ? { ...character, ...changes }
+          : character
+      )
     );
   }
 
-  function handleSceneSelect(sceneId) {
-    setCurrentSceneId(sceneId);
+  // Update a specific scene
+  function handleSceneUpdate(sceneId, changes) {
+    setScenes((previous) =>
+      previous.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, ...changes }
+          : scene
+      )
+    );
   }
 
+  // Handle narrative choice selection
   function handleChoiceSelect(choiceIndex) {
     setSelectedChoices((previous) => ({
       ...previous,
       [currentSceneId]: choiceIndex
     }));
 
-    const nextScene = scenes.find(
-      (scene) =>
-        scene.parent_scene_id === currentSceneId &&
-        scene.from_choice_index === choiceIndex
-    );
-
-    if (nextScene) {
-      setCurrentSceneId(nextScene.id);
-      setActiveBranchEndId(nextScene.id);
-    } else {
-      console.log(
-        "No mock scene exists for this choice yet.",
-        choiceIndex
-      );
-    }
+    console.log("Selected choice:", choiceIndex);
   }
 
-  const selectedChoice =
-    selectedChoices[currentSceneId] ??
-    currentScene?.selected_choice ??
-    null;
+  // Navigate to a previous scene
+  function handleSceneSelect(sceneId) {
+    setCurrentSceneId(sceneId);
+
+    setProject((previous) => ({
+      ...previous,
+      current_scene_id: sceneId
+    }));
+  }
 
   return (
     <>
@@ -82,18 +108,28 @@ export default function WorkspacePage() {
 
       <div className="workspace-layout">
         <aside className="workspace-sidebar">
-          <ConceptPanel project={project} />
-          <CharacterList characters={characters} />
+          <ConceptPanel
+            project={project}
+            onUpdate={handleProjectUpdate}
+          />
+
+          <CharacterList
+            characters={characters}
+            onCharacterUpdate={handleCharacterUpdate}
+          />
         </aside>
 
         <main className="workspace-main">
           <SceneHistory
-            scenes={scenePath}
+            scenes={scenes}
             currentSceneId={currentSceneId}
             onSelect={handleSceneSelect}
           />
 
-          <SceneView scene={currentScene} />
+          <SceneView
+            scene={currentScene}
+            onUpdate={handleSceneUpdate}
+          />
 
           <ChoiceButtons
             choices={currentScene?.choices ?? []}

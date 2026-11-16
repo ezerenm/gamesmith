@@ -1,9 +1,4 @@
 :root {
-  /* Main theme */
-  --accent-primary: #d4a76c;
-  --accent-hover: #e5bc85;
-  --accent-subtle: rgba(212, 167, 108, 0.12);
-
   /* Parchment surface */
   --parchment-bg: #e8dcc3;
   --parchment-text: #35291d;
@@ -23,18 +18,21 @@
   /* Text colors */
   --text-primary: #f2eee8;
   --text-secondary: #aaa5a0;
-  --text-muted: #77737a;
+  --text-muted: #a09a94;
 
   /* GameSmith accent */
-  --accent-primary: #e89a57;
-  --accent-hover: #f2ad73;
-  --accent-subtle: rgba(232, 154, 87, 0.12);
+  --accent-primary: #d4a76c;
+  --accent-hover: #e5bc85;
+  --accent-subtle: rgba(212, 167, 108, 0.12);
 
   /* Status colors */
   --success: #76b995;
   --error: #df7777;
 
   /* Typography */
+  --font-story: Georgia, "Times New Roman", serif;
+  --parchment-input: #f4ead5;
+  --content-width: 900px;
   --font-primary: "Inter", "Segoe UI", sans-serif;
 
   /* Layout */
@@ -51,6 +49,6 @@
 
   /* Border radius */
   --radius-sm: 6px;
-  --radius-md: 10px;
+  --radius-md: 8px;
   --radius-lg: 16px;
 }

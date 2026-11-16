@@ -1,0 +1,134 @@
+.parchment-panel {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+  background: var(--parchment-bg);
+  color: var(--parchment-text);
+  border: 1px solid var(--parchment-border);
+  border-radius: var(--radius-md);
+}
+
+.parchment-panel h1,
+.parchment-panel h2,
+.parchment-panel h3 {
+  color: var(--parchment-text);
+}
+
+.parchment-panel p {
+  color: var(--parchment-text);
+  line-height: 1.8;
+}
+
+.scene-view {
+  padding: 40px 48px;
+}
+
+.scene-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.scene-label,
+.scene-number {
+  color: var(--parchment-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.scene-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.scene-title {
+  color: var(--parchment-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.8rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+  margin-bottom: 28px;
+}
+
+.scene-text {
+  color: var(--parchment-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.scene-empty {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.scene-text .editable-display {
+  align-items: flex-start;
+}
+
+.scene-text .editable-display > span {
+  white-space: pre-wrap;
+}
+
+.scene-text .editable-input {
+  min-height: 180px;
+  resize: vertical;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+
+.scene-text .edit-button {
+  font-family: inherit;
+}
+
+
+.parchment-panel .editable-input {
+  background: #f4ead5;
+  color: var(--parchment-text);
+  border-color: var(--parchment-border);
+}
+
+.parchment-panel .editable-cancel {
+  color: var(--parchment-text);
+  border-color: var(--parchment-border);
+}
+
+.parchment-panel .edit-button {
+  color: var(--parchment-muted);
+}
+
+
+@media (max-width: 768px) {
+  .scene-view {
+    padding: 24px;
+  }
+
+  .scene-title {
+    font-size: 1.4rem;
+  }
+}
+
+/* Studio workspace polish */
+.parchment-panel { max-width: var(--content-width); border-radius: var(--radius-sm); box-shadow: 0 6px 20px rgb(0 0 0 / 12%); }
+.scene-view { padding: 28px clamp(24px, 4vw, 56px) 48px; }
+.scene-heading { flex-wrap: wrap; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--parchment-border); margin-bottom: 32px; }
+.scene-label, .scene-number { font-size: 0.65rem; }
+.scene-number { font-variant-numeric: tabular-nums; }
+.scene-content { max-width: 65ch; }
+.scene-title { font: 400 clamp(1.6rem, 2.5vw, 2.15rem)/1.25 var(--font-story); text-align: left; margin-bottom: 24px; }
+.scene-text { font: 1.08rem/1.95 var(--font-story); white-space: normal; }
+.scene-text .editable-display { flex-direction: column; gap: 20px; }
+.scene-text .editable-display > span { width: 100%; }
+.scene-text .edit-button { align-self: flex-end; font: 500 0.72rem var(--font-primary); }
+.scene-text .editable-input { min-height: 250px; font: inherit; }
+.parchment-panel .editable-input { background: var(--parchment-input); border-color: var(--parchment-muted); }
+.parchment-panel :focus-visible, .parchment-panel .editable-input:focus { outline-color: var(--parchment-muted); }
+.parchment-panel .editable-cancel, .parchment-panel .edit-button { color: var(--parchment-text); border: 1px solid var(--parchment-border); }
+.parchment-panel .editable-cancel:hover, .parchment-panel .edit-button:hover { background: var(--parchment-input); border-color: var(--parchment-muted); }
+.parchment-panel .editable-save { background: var(--parchment-text); color: var(--parchment-input); }
+.parchment-panel .editable-save:hover:not(:disabled) { background: var(--parchment-muted); }
+@media (max-width: 768px) { .scene-view { padding: 24px 24px 32px; } .scene-heading { margin-bottom: 24px; } }
