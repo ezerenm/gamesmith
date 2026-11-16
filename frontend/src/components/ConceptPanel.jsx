@@ -1,7 +1,11 @@
 import EditableText from "./EditableText";
 import "../styles/components/concept-panel.css";
 
-export default function ConceptPanel({ project, onUpdate }) {
+export default function ConceptPanel({
+  project,
+  onUpdate,
+  onRegenerate
+}) {
   if (!project) return null;
 
   return (
@@ -34,6 +38,18 @@ export default function ConceptPanel({ project, onUpdate }) {
           <div className="detail-value"><EditableText value={project.setting} label="Edit project setting" onSave={(value) => onUpdate?.({ setting: value })} /></div>
         </div>
       </div>
+
+      {onRegenerate && (
+        <div className="concept-regenerate">
+          <button
+            type="button"
+            className="concept-regenerate-button"
+            onClick={onRegenerate}
+          >
+            Regenerate Concept
+          </button>
+        </div>
+      )}
     </section>
   );
 }

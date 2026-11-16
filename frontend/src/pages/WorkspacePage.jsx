@@ -6,6 +6,7 @@ import CharacterList from "../components/CharacterList";
 import SceneView from "../components/SceneView";
 import SceneHistory from "../components/SceneHistory";
 import ChoiceButtons from "../components/ChoiceButtons";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 import { mockWorkspace } from "../api/mockData";
 import "../styles/layout/workspace.css";
@@ -51,6 +52,21 @@ export default function WorkspacePage() {
     selectedChoices[currentSceneId] ??
     currentScene?.selected_choice ??
     null;
+
+  const [showRegenerateDialog, setShowRegenerateDialog] =
+    useState(false);
+
+  function handleRegenerateRequest() {
+    setShowRegenerateDialog(true);
+  }
+
+  function handleRegenerateConfirm() {
+    setShowRegenerateDialog(false);
+
+    // TODO: Connect POST /projects/{id}/concept.
+    // Do not overwrite local data until the API succeeds.
+    console.log("Concept regeneration confirmed.");
+  }
 
   // Update project information
   function handleProjectUpdate(changes) {
@@ -111,6 +127,7 @@ export default function WorkspacePage() {
           <ConceptPanel
             project={project}
             onUpdate={handleProjectUpdate}
+            onRegenerate={handleRegenerateRequest}
           />
 
           <CharacterList
@@ -135,6 +152,15 @@ export default function WorkspacePage() {
             choices={currentScene?.choices ?? []}
             selectedChoice={selectedChoice}
             onSelect={handleChoiceSelect}
+          />
+
+          <ConfirmDialog
+            open={showRegenerateDialog}
+            title="Regenerate this concept?"
+            message="Generating a new concept may replace your current title, premise, genre, tone, and setting. Review your existing work before continuing."
+            confirmLabel="Regenerate"
+            onConfirm={handleRegenerateConfirm}
+            onCancel={() => setShowRegenerateDialog(false)}
           />
         </main>
       </div>
