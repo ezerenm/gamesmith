@@ -7,6 +7,7 @@ import SceneView from "../components/SceneView";
 import SceneHistory from "../components/SceneHistory";
 import ChoiceButtons from "../components/ChoiceButtons";
 import ConfirmDialog from "../components/ConfirmDialog";
+import WorkspaceState from "../components/WorkspaceState";
 
 import { mockWorkspace } from "../api/mockData";
 import "../styles/layout/workspace.css";
@@ -56,16 +57,29 @@ export default function WorkspacePage() {
   const [showRegenerateDialog, setShowRegenerateDialog] =
     useState(false);
 
+  const [generationNotice, setGenerationNotice] = useState("");
+  const regenerationBlocked = characters.length > 0 || scenes.length > 0;
+  const hasOriginalIdea = typeof project.original_idea === "string"
+    && project.original_idea.trim().length > 0;
+
+  function handleGenerateRequest() {
+    if (!hasOriginalIdea) return;
+
+    // Future integration: POST /projects/{id}/concept uses the saved original_idea.
+    // Only a successful API response should update the generated concept fields.
+    setGenerationNotice("Concept generation is not connected yet. Your project has not been changed.");
+  }
+
   function handleRegenerateRequest() {
+    if (regenerationBlocked || !hasOriginalIdea) return;
+    setGenerationNotice("");
     setShowRegenerateDialog(true);
   }
 
   function handleRegenerateConfirm() {
     setShowRegenerateDialog(false);
-
-    // TODO: Connect POST /projects/{id}/concept.
-    // Do not overwrite local data until the API succeeds.
-    console.log("Concept regeneration confirmed.");
+    if (regenerationBlocked || !hasOriginalIdea) return;
+    handleGenerateRequest();
   }
 
   // Update project information
@@ -128,6 +142,9 @@ export default function WorkspacePage() {
             project={project}
             onUpdate={handleProjectUpdate}
             onRegenerate={handleRegenerateRequest}
+            onGenerate={handleGenerateRequest}
+            regenerationBlocked={regenerationBlocked}
+            generationNotice={generationNotice}
           />
 
           <CharacterList
@@ -137,27 +154,45 @@ export default function WorkspacePage() {
         </aside>
 
         <main className="workspace-main">
-          <SceneHistory
-            scenes={scenes}
-            currentSceneId={currentSceneId}
-            onSelect={handleSceneSelect}
-          />
+          {scenes.length === 0 ? (
+            <WorkspaceState
+              title="Your Story Awaits"
+              description="Your game world is ready for its first chapter. Generate an opening scene to begin shaping the narrative."
+            />
+          ) : (
+            <>
+              <SceneHistory
+                scenes={scenes}
+                currentSceneId={currentSceneId}
+                onSelect={handleSceneSelect}
+              />
 
-          <SceneView
-            scene={currentScene}
-            onUpdate={handleSceneUpdate}
-          />
+              {currentScene ? (
+                <>
+                  <SceneView
+                    scene={currentScene}
+                    onUpdate={handleSceneUpdate}
+                  />
 
-          <ChoiceButtons
-            choices={currentScene?.choices ?? []}
-            selectedChoice={selectedChoice}
-            onSelect={handleChoiceSelect}
-          />
+                  <ChoiceButtons
+                    choices={currentScene.choices ?? []}
+                    selectedChoice={selectedChoice}
+                    onSelect={handleChoiceSelect}
+                  />
+                </>
+              ) : (
+                <WorkspaceState
+                  title="Scene unavailable"
+                  description="This scene could not be found. Select a scene from Story History to continue."
+                />
+              )}
+            </>
+          )}
 
           <ConfirmDialog
             open={showRegenerateDialog}
-            title="Regenerate this concept?"
-            message="Generating a new concept may replace your current title, premise, genre, tone, and setting. Review your existing work before continuing."
+            title="Regenerate your concept?"
+            message="GameSmith will create a new interpretation of your original game idea. Your current generated concept may be replaced, including any manual edits."
             confirmLabel="Regenerate"
             onConfirm={handleRegenerateConfirm}
             onCancel={() => setShowRegenerateDialog(false)}

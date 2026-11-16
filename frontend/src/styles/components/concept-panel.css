@@ -94,7 +94,7 @@
   transition: background 150ms ease, border-color 150ms ease;
 }
 
-.concept-regenerate-button:hover {
+.concept-regenerate-button:hover:not(:disabled) {
   background: var(--accent-subtle);
   border-color: var(--accent-primary);
 }
@@ -102,4 +102,29 @@
 .concept-regenerate-button:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 3px;
+}
+.concept-original-idea {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.concept-original-idea p,
+.concept-empty p,
+.concept-action-help {
+  margin-top: var(--space-sm);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.concept-original-idea p {
+  white-space: pre-wrap;
+}
+
+.concept-empty h2 {
+  font-family: var(--font-story);
+  font-size: 1.2rem;
+  font-weight: 500;
 }
