@@ -1,9 +1,12 @@
+
 import TopBar from "../components/TopBar";
+import ConceptPanel from "../components/ConceptPanel";
 import { mockWorkspace } from "../api/mockData";
 import "../styles/workspace.css";
 
 export default function WorkspacePage() {
   const { project, characters, scenes } = mockWorkspace;
+
   const currentScene = scenes.find(
     (scene) => scene.id === project.current_scene_id
   );
@@ -14,11 +17,9 @@ export default function WorkspacePage() {
 
       <div className="workspace-layout">
         <aside className="workspace-sidebar">
-          <h2>Concept</h2>
-          <h3>{project.title}</h3>
-          <p>{project.premise}</p>
+          <ConceptPanel project={project} />
 
-          <h2>Characters</h2>
+          <h2 style={{ marginTop: "24px" }}>Characters</h2>
           {characters.map((character) => (
             <p key={character.id}>{character.name}</p>
           ))}
