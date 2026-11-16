@@ -252,3 +252,126 @@
   font-size: 0.8rem;
   line-height: 1.6;
 }
+
+
+/* Scene display */
+.scene-view {
+  padding: 40px 48px;
+}
+
+.scene-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.scene-label,
+.scene-number {
+  color: var(--parchment-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.scene-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.scene-title {
+  color: var(--parchment-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.scene-text {
+  color: var(--parchment-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.scene-empty {
+  text-align: center;
+  padding: 40px 0;
+}
+
+/* Narrative choices */
+.choice-section {
+  max-width: 900px;
+  margin: 24px auto 0;
+}
+
+.choice-heading {
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.choice-button:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+}
+
+.choice-button.selected {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+}
+
+.choice-index {
+  color: var(--accent-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.choice-text {
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.choice-arrow {
+  color: var(--accent-primary);
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .scene-view {
+    padding: 24px;
+  }
+
+  .scene-title {
+    font-size: 1.4rem;
+  }
+
+  .choice-button {
+    padding: 16px;
+  }
+}
