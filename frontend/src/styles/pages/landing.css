@@ -1,0 +1,74 @@
+.landing-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing-page .landing-header {
+  justify-content: space-between;
+  padding-inline: clamp(20px, 4vw, 64px);
+}
+
+.landing-main {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.landing-home { width: min(100%, 800px); min-width: 0; }
+.landing-home h1 {
+  text-align: center;
+  font: 400 clamp(1.9rem, 4vw, 2.6rem)/1.2 var(--font-story);
+  letter-spacing: -0.6px;
+  text-wrap: balance;
+}
+.landing-subtitle { margin: 14px 0 28px; color: var(--text-secondary); text-align: center; font-size: 0.9rem; }
+.landing-idea-form { min-width: 0; }
+.landing-input-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.landing-composer { padding: var(--space-md); border: 1px solid var(--border-secondary); border-radius: var(--radius-lg); background: color-mix(in srgb, var(--bg-secondary) 80%, var(--bg-tertiary)); }
+.landing-composer:focus-within { border-color: var(--accent-primary); }
+.landing-composer:has([aria-invalid="true"]) { border-color: var(--error); }
+.landing-composer textarea {
+  display: block;
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.7;
+  resize: vertical;
+}
+.landing-composer textarea:focus { outline: none; }
+.landing-composer textarea::placeholder { color: var(--text-muted); opacity: 1; }
+.landing-composer-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); margin-top: var(--space-sm); }
+.landing-keyboard-hint { padding-left: var(--space-sm); color: var(--text-muted); font-size: 0.7rem; }
+.landing-create-button { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; padding: 0; border-radius: 50%; background: var(--accent-primary); color: var(--bg-primary); }
+.landing-create-button:hover:not(:disabled) { background: var(--accent-hover); }
+.landing-create-button:active:not(:disabled) { background: var(--accent-primary); box-shadow: inset 0 0 0 2px var(--parchment-muted); }
+.landing-create-button:focus-visible, .landing-starter:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 4px; }
+.landing-create-button:disabled { opacity: 0.5; cursor: wait; }
+.landing-form-error { margin-top: var(--space-md); color: var(--text-secondary); font-size: 0.8rem; line-height: 1.6; overflow-wrap: anywhere; }
+.landing-starters { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.landing-starter { min-height: 40px; padding: 10px 16px; border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: transparent; color: var(--text-secondary); font-size: 0.8rem; }
+.landing-starter:hover:not(:disabled) { color: var(--accent-primary); background: var(--accent-subtle); border-color: var(--parchment-muted); }
+.landing-starter:active:not(:disabled) { border-color: var(--accent-primary); }
+.landing-form-status:not(:empty) { margin-top: var(--space-md); color: var(--text-secondary); font-size: 0.8rem; text-align: center; }
+.landing-submit-spinner { width: 18px; height: 18px; border: 2px solid var(--parchment-muted); border-top-color: var(--bg-primary); border-radius: 50%; animation: landing-submit-spin 1s linear infinite; }
+@keyframes landing-submit-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .landing-submit-spinner { animation: none; } }
+@media (max-width: 600px) {
+  .landing-main { padding: var(--space-xl) var(--space-md); }
+  .landing-composer { padding: 12px; }
+  .landing-subtitle { font-size: 0.85rem; }
+  .landing-starter { min-height: 44px; }
+}
+
+/* Bias the center down by 24px only when desktop height permits. */
+@media (min-width: 1024px) and (min-height: 800px) {
+  .landing-main { padding-top: calc(var(--space-2xl) + 48px); }
+}
