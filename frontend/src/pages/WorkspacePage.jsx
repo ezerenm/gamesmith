@@ -3,6 +3,7 @@ import TopBar from "../components/TopBar";
 import ConceptPanel from "../components/ConceptPanel";
 import { mockWorkspace } from "../api/mockData";
 import "../styles/workspace.css";
+import CharacterList from "../components/CharacterList";
 
 export default function WorkspacePage() {
   const { project, characters, scenes } = mockWorkspace;
@@ -19,10 +20,7 @@ export default function WorkspacePage() {
         <aside className="workspace-sidebar">
           <ConceptPanel project={project} />
 
-          <h2 style={{ marginTop: "24px" }}>Characters</h2>
-          {characters.map((character) => (
-            <p key={character.id}>{character.name}</p>
-          ))}
+          <CharacterList characters={characters} />
         </aside>
 
         <main className="workspace-main">
