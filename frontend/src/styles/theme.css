@@ -1,0 +1,56 @@
+:root {
+  /* Main theme */
+  --accent-primary: #d4a76c;
+  --accent-hover: #e5bc85;
+  --accent-subtle: rgba(212, 167, 108, 0.12);
+
+  /* Parchment surface */
+  --parchment-bg: #e8dcc3;
+  --parchment-text: #35291d;
+  --parchment-muted: #80613e;
+  --parchment-border: #c3af91;
+
+
+  /* Background colors */
+  --bg-primary: #141416;
+  --bg-secondary: #1c1c1f;
+  --bg-tertiary: #252529;
+
+  /* Borders */
+  --border-primary: #343438;
+  --border-secondary: #45454a;
+
+  /* Text colors */
+  --text-primary: #f2eee8;
+  --text-secondary: #aaa5a0;
+  --text-muted: #77737a;
+
+  /* GameSmith accent */
+  --accent-primary: #e89a57;
+  --accent-hover: #f2ad73;
+  --accent-subtle: rgba(232, 154, 87, 0.12);
+
+  /* Status colors */
+  --success: #76b995;
+  --error: #df7777;
+
+  /* Typography */
+  --font-primary: "Inter", "Segoe UI", sans-serif;
+
+  /* Layout */
+  --sidebar-width: 340px;
+  --header-height: 72px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
