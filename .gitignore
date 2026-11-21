@@ -1,4 +1,10 @@
 backend/venv/
+backend/*.db
+backend/*.db-*
+backend/*.sqlite
+backend/*.sqlite-*
+backend/*.sqlite3
+backend/*.sqlite3-*
 backend/.env
 frontend/.env
 
@@ -222,3 +228,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node.js / React / Vite
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
