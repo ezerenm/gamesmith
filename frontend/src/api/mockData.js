@@ -102,3 +102,38 @@ export const mockWorkspace = {
     }
   ]
 };
+
+
+// GET /projects → { projects: [Project, ...] }
+// Covers the three states the list has to render: a project still waiting
+// on its concept (concept fields null), a concept with no opening scene
+// yet (current_scene_id null), and a project already in progress.
+export const mockProjectList = {
+  projects: [
+    { ...mockWorkspace.project },
+    {
+      id: 2,
+      original_idea: "A lighthouse keeper rearranges constellations to guide lost ships through a sea of memories.",
+      title: "The Keeper of Quiet Stars",
+      premise: "When the stars begin to drift, a reclusive lighthouse keeper discovers she can move them by hand, and every ship she saves costs her a memory.",
+      genre: "Puzzle Adventure",
+      tone: "Melancholy, Wondrous",
+      setting: "A fog-bound coast where the sea reflects forgotten moments.",
+      current_scene_id: null,
+      created_at: "2026-11-18T14:12:00Z",
+      updated_at: "2026-11-18T14:20:00Z"
+    },
+    {
+      id: 3,
+      original_idea: "A sci-fi mystery aboard a silent space station where the crew has vanished and every recording tells a different story.",
+      title: null,
+      premise: null,
+      genre: null,
+      tone: null,
+      setting: null,
+      current_scene_id: null,
+      created_at: "2026-11-20T09:05:00Z",
+      updated_at: "2026-11-20T09:05:00Z"
+    }
+  ]
+};
