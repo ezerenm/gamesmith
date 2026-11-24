@@ -14,3 +14,11 @@ if not databasePath.is_absolute():
 databasePath = databasePath.resolve()
 
 corsOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+
+geminiApiKey = os.getenv("GEMINI_API_KEY")
+
+primaryModelName = "gemini-3.8-flash"
+
+fallbackModelName = "gemini-3.5-flash-lite"
+
+retriesPerModel = 3
