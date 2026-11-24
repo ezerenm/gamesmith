@@ -25,3 +25,19 @@ def getProject(session: Session, projectId: int) -> Project | None:
 
 def listProjects(session: Session) -> list[Project]:
     return list(session.scalars(select(Project).order_by(Project.id)))
+
+def saveConcept(conceptDbSession: Session, targetProject: Project, conceptValues: dict) -> Project:
+    targetProject.title = conceptValues["title"]
+    targetProject.premise = conceptValues["premise"]
+    targetProject.genre = conceptValues["genre"]
+    targetProject.tone = conceptValues["tone"]
+    targetProject.setting = conceptValues["setting"]
+
+    try:
+        conceptDbSession.commit()
+        conceptDbSession.refresh(targetProject)
+
+    except Exception:
+        conceptDbSession.rollback()
+        raise
+    return targetProject
