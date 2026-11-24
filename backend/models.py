@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CreateProjectRequest(BaseModel):
@@ -31,6 +31,31 @@ class ProjectResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+class CreateCharactersRequest(BaseModel):
+    
+    model_config = ConfigDict(extra="forbid")
+    # reject any fields we did not ask for
+
+    count: int = Field(default=3, ge=1, le=5)
+    # how many characters to create
+    # default is 3 if they send {}, ge1 means at least one and le5 means at most 5
+
+class CharacterResponse(BaseModel):
+    # the shape of ONE character we send back
+    model_config = ConfigDict(from_attributes=True)
+    # lets Pydantic read straight from a database Character row
+
+    id: int
+    project_id: int
+    name: str
+    role: str
+    traits: list[str]
+    backstory: str
+
+class CharacterListResponse(BaseModel):
+    
+    characters: list[CharacterResponse]
+
 
 class ProjectListResponse(BaseModel):
     projects: list[ProjectResponse]
@@ -39,7 +64,7 @@ class ProjectListResponse(BaseModel):
 class WorkspaceResponse(BaseModel):
     project: ProjectResponse
     # No character/scene persistence exists in Milestone 1.
-    characters: list[dict]
+    characters: list[CharacterResponse]
     scenes: list[dict]
 
 

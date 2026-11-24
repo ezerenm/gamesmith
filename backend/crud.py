@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .database import Project, utcTimestamp
+from .database import Character, Project, utcTimestamp
 
 
 def createProject(session: Session, originalIdea: str) -> Project:
@@ -41,3 +41,51 @@ def saveConcept(conceptDbSession: Session, targetProject: Project, conceptValues
         conceptDbSession.rollback()
         raise
     return targetProject
+
+def listCharacters(rosterDbSession: Session, rosterProjectId: int) -> list[Character]:
+    # gets ecery character from one project, oldest is first
+
+    characterQuery = (
+        select(Character)
+        .where(Character.project_id == rosterProjectId)
+        .order_by(Character.id)
+
+    )
+
+    return list(rosterDbSession.scalars(characterQuery))
+
+def saveCharacters(castDbSession: Session, castProjectId: int, generatedCast: list) -> list[Character]:
+    # turns Gemini's list of dicts into database rows
+
+    newCharacterRows = []
+
+    for oneGeneratedCharacter in generatedCast:
+
+        characterRow = Character(
+            project_id=castProjectId,
+            name=oneGeneratedCharacter["name"],
+            role=oneGeneratedCharacter["role"],
+            traits=oneGeneratedCharacter["traits"],
+            backstory=oneGeneratedCharacter["backstory"],
+
+        )
+        # one new row, filled from one character dict
+
+        castDbSession.add(characterRow)
+        # staged, hasn't saved yet
+        newCharacterRows.append(characterRow)
+
+    try:
+        castDbSession.commit()
+        # saves all of them at once
+
+        for savedRow in newCharacterRows:
+            castDbSession.refresh(savedRow)
+            # reloads each one so it has its new id
+    
+    except Exception:
+        castDbSession.rollback()
+        # if saving fails, undo everything
+        raise
+    
+    return newCharacterRows
