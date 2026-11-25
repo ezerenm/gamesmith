@@ -22,3 +22,5 @@ primaryModelName = "gemini-3.8-flash"
 fallbackModelName = "gemini-3.5-flash-lite"
 
 retriesPerModel = 3
+
+geminiTimeoutMilliseconds = 30000
