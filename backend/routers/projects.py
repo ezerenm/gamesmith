@@ -10,9 +10,9 @@ from ..geminiService import generateJson
 
 from ..models import (
     CharacterListResponse, CreateCharactersRequest, CreateProjectRequest, ErrorResponse, ProjectListResponse,
-    ProjectResponse, WorkspaceResponse,
+    ProjectResponse, SceneResponse, WorkspaceResponse,
 )
-from ..prompts import buildCharactersPrompt, buildConceptPrompt, buildCharactersSchema, characterListFieldNames, conceptFieldNames, conceptSchema
+from ..prompts import buildCharactersPrompt, buildConceptPrompt, buildCharactersSchema, buildOpeningScenePrompt, characterListFieldNames, conceptFieldNames, conceptSchema, sceneFieldNames, sceneSchema
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 SessionDependency = Annotated[Session, Depends(getSession)]
@@ -38,7 +38,7 @@ def getProject(id: ProjectId, session: SessionDependency):
     project = crud.getProject(session, id)
     if project is None:
         raise ApiError(404, "not_found", "Project not found.")
-    return {"project": project, "characters": crud.listCharacters(session, id), "scenes": [],}
+    return {"project": project, "characters": crud.listCharacters(session, id), "scenes": crud.listScenes(session,id),}
 
 @router.post(
     "/{conceptProjectId}/concept", response_model=ProjectResponse,
@@ -117,3 +117,45 @@ def generateCharacters(
     savedCharacters = crud.saveCharacters(characterSession, characterProjectId, generatedCharacterList)
 
     return {"characters": savedCharacters}
+
+@router.post(
+    "/{sceneProjectId}/scenes", response_model=SceneResponse,
+
+    responses={
+        **invalidInputResponse, 404: {"model": ErrorResponse}, 409: {"model": ErrorResponse},
+        422: {"model": ErrorResponse}, 503: {"model": ErrorResponse},
+
+    },
+)
+
+def generateOpeningScene(sceneProjectId: ProjectId, sceneSession: SessionDependency):
+
+    storyOwnerProject = crud.getProject(sceneSession, sceneProjectId)
+
+    if storyOwnerProject is None:
+        raise ApiError(404, "not_found", "Project not found.")
+
+    if storyOwnerProject.title is None:
+        raise ApiError(409, "concept_required", "Generate a concept before creating scenes.")
+
+    existingOpeningScene = crud.getOpeningScene(sceneSession, sceneProjectId)
+
+    if existingOpeningScene is not None:
+        raise ApiError(400, "invalid_input", "This project already has an opening scene.")
+
+    sceneCastMembers = crud.listCharacters(sceneSession, sceneProjectId)
+
+    openingPromptText = buildOpeningScenePrompt(storyOwnerProject, sceneCastMembers)
+
+    generatedOpeningScene = generateJson(openingPromptText, sceneSchema, sceneFieldNames)
+
+    generatedChoiceTexts = generatedOpeningScene["choices"]
+
+    if len(generatedChoiceTexts) != 2:
+        raise ApiError(422, "invalid_generation", "The AI gave an unusable answer. Please try again.")
+
+    for checkedChoiceText in generatedChoiceTexts:
+        if checkedChoiceText.strip() == "":
+            raise ApiError(422, "invalid_generation", "The AI gave an unusable answer. Please try again.")
+
+    return crud.saveOpeningScene(sceneSession, storyOwnerProject, generatedOpeningScene)

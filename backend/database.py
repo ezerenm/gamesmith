@@ -3,7 +3,7 @@
 from collections.abc import Iterator
 from datetime import UTC, datetime
 
-from sqlalchemy import JSON, ForeignKey, Integer, Text, URL, create_engine, event
+from sqlalchemy import JSON, ForeignKey, Index, Integer, Text, URL, create_engine, event
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 from .config import databasePath
@@ -57,6 +57,27 @@ class Character(Base):
 
     backstory: Mapped[str] = mapped_column(Text, nullable=False)
 
+class Scene(Base):
+
+    __tablename__ = "scenes"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+    project_id: Mapped[int] = mapped_column(Integer, ForeignKey("projects.id"), nullable=False)
+
+    parent_scene_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("scenes.id"))
+
+    from_choice_index: Mapped[int | None] = mapped_column(Integer)
+
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+
+    choices: Mapped[list[dict]] = mapped_column(JSON, nullable=False)
+
+    selected_choice: Mapped[int | None] = mapped_column(Integer)
+
+    created_at: Mapped[str] = mapped_column(Text, default=utcTimestamp, nullable=False)
+
+    __table_args__ = (Index("ix_scenes_parent_choice", "parent_scene_id", "from_choice_index"),)
 
 engine = create_engine(
     URL.create("sqlite", database=str(databasePath)),

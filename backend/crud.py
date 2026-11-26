@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .database import Character, Project, utcTimestamp
+from .database import Character, Project, Scene, utcTimestamp
 
 
 def createProject(session: Session, originalIdea: str) -> Project:
@@ -89,3 +89,65 @@ def saveCharacters(castDbSession: Session, castProjectId: int, generatedCast: li
         raise
     
     return newCharacterRows
+
+def listScenes(sceneListDbSession: Session, sceneListProjectId: int) -> list[Scene]:
+
+    sceneQuery = (
+        select(Scene)
+        .where(Scene.project_id == sceneListProjectId)
+        .order_by(Scene.id)
+
+    )
+
+    return list(sceneListDbSession.scalars(sceneQuery))
+
+def getOpeningScene(openingCheckDbSession: Session, openingCheckProjectId: int) -> Scene | None:
+
+    openingSceneQuery = (
+        select(Scene)
+        .where(Scene.project_id == openingCheckProjectId)
+        .where(Scene.parent_scene_id.is_(None))
+
+    )
+
+    return openingCheckDbSession.scalars(openingSceneQuery).first()
+
+def saveOpeningScene(openingDbSession: Session, openingProject: Project, generatedSceneValues: dict) -> Scene:
+
+    numberedChoices = []
+
+    choiceNumber = 0
+
+    for oneChoiceText in generatedSceneValues["choices"]:
+
+        numberedChoices.append({"index": choiceNumber, "text": oneChoiceText})
+
+        choiceNumber = choiceNumber + 1
+
+    openingSceneRow = Scene(
+        project_id=openingProject.id,
+        parent_scene_id=None,
+        from_choice_index=None,
+        text=generatedSceneValues["text"],
+        choices=numberedChoices,
+        selected_choice=None,
+
+    )
+
+    try:
+
+        openingDbSession.add(openingSceneRow)
+
+        openingDbSession.flush()
+
+        openingProject.current_scene_id = openingSceneRow.id
+
+        openingDbSession.commit()
+
+        openingDbSession.refresh(openingSceneRow)
+
+    except Exception:
+        openingDbSession.rollback()
+        raise
+    
+    return openingSceneRow

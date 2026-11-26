@@ -56,6 +56,24 @@ class CharacterListResponse(BaseModel):
     
     characters: list[CharacterResponse]
 
+class SceneChoiceResponse(BaseModel):
+
+    index: int
+    text: str
+
+class SceneResponse(BaseModel):
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    project_id: int
+    parent_scene_id: int | None
+    from_choice_index: int | None
+    text: str
+    choices: list[SceneChoiceResponse]
+    selected_choice: int | None
+    created_at: datetime
+
 
 class ProjectListResponse(BaseModel):
     projects: list[ProjectResponse]
@@ -63,9 +81,8 @@ class ProjectListResponse(BaseModel):
 
 class WorkspaceResponse(BaseModel):
     project: ProjectResponse
-    # No character/scene persistence exists in Milestone 1.
     characters: list[CharacterResponse]
-    scenes: list[dict]
+    scenes: list[SceneResponse]
 
 
 class ErrorResponse(BaseModel):

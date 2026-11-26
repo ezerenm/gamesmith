@@ -100,3 +100,51 @@ def buildCharactersPrompt(storyProject, takenNames, characterCount):
     # the concept that goes into the prompt so characters fit their game
 
     return characterInstructions
+
+sceneFieldNames = ["text", "choices"]
+
+sceneSchema = {
+    "type": "object",
+
+    "properties": {
+        "text": {"type": "string"},
+        "choices": {
+            "type": "array",
+            "items": {"type": "string"},
+            "minItems": 2,
+            "maxItems": 2,
+
+        },
+    },
+    "required": ["text", "choices"],
+
+}
+
+def buildOpeningScenePrompt(sceneStoryProject, castMembers):
+
+    castDescription = "No characters yet. You may invent minor characters if needed.\n"
+
+    if len(castMembers) > 0:
+
+        castDescription = ""
+
+        for oneCastMember in castMembers:
+
+            castDescription = castDescription + "- " + oneCastMember.name + " (" + oneCastMember.role + "): " + oneCastMember.backstory + "\n"
+    
+    openingSceneInstructions = (
+        "You are a genius game writer creating the opening scene of a branching story game.\n\n"
+        "Game title: " + sceneStoryProject.title + "\n"
+        "Premise: " + sceneStoryProject.premise + "\n"
+        "Genre: " + sceneStoryProject.genre + "\n"
+        "Tone: " + sceneStoryProject.tone + "\n"
+        "Setting: " + sceneStoryProject.setting + "\n\n"
+        "Characters:\n" + castDescription + "\n"
+        "Rules:\n"
+        "- text: the opening scene in 1 to 2 short paragraphs, written in second person (\"you\")\n"
+        "- use at least one of the characters above if there are any\n"
+        "- end the scene at a moment where the player has to make a decision\n"
+        "- choices: exactly 2 different actions the player can take, each under 12 words\n"
+    )
+
+    return openingSceneInstructions
