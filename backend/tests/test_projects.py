@@ -13,6 +13,8 @@ from sqlalchemy.orm import sessionmaker
 
 from backend import crud, database, main
 
+from backend.routers import projects as projectsRouter
+
 
 @pytest.fixture
 def isolatedApp(tmp_path, monkeypatch):
@@ -154,3 +156,66 @@ with TestClient(app) as client:
 '''
     for code in (createCode, reopenCode):
         subprocess.run([sys.executable, "-c", code], cwd=repoRoot, env=environment, check=True)
+
+def fakeSceneGenerator(promptText, outputSchema, requiredFieldNames):
+
+    if "title" in requiredFieldNames:
+
+        return {
+
+            "title": "Test Game", "premise": "A test premise.", "genre": "adventure",
+            "tone": "hopeful", "setting": "A test harbor.",
+
+        }
+    
+    return {"text": "The harbor bell rings.", "choices": ["Board the ship", "Follow the stranger"]}
+
+def testOpeningSceneNeedsConcept(client, monkeypatch):
+
+    monkeypatch.setattr(projectsRouter, "generateJson", fakeSceneGenerator)
+
+    noConceptProjectId = client.post("/projects", json={"original_idea": "Pirates"}).json()["id"]
+
+    noConceptResponse = client.post(f"/projects/{noConceptProjectId}/scenes", json={})
+
+    assert noConceptResponse.status_code == 409
+
+    assert noConceptResponse.json()["error"] == "concept_required"
+
+def testOpeningSceneisSavedOnce(client, monkeypatch):
+
+    monkeypatch.setattr(projectsRouter, "generateJson", fakeSceneGenerator)
+
+    sceneTestProjectId = client.post("/projects", json={"original_idea": "Pirates"}).json()["id"]
+
+    client.post(f"/projects/{sceneTestProjectId}/concept", json={})
+
+    firstSceneResponse = client.post(f"/projects/{sceneTestProjectId}/scenes", json={})
+
+    assert firstSceneResponse.status_code == 200
+
+    openingScene = firstSceneResponse.json()
+
+    assert openingScene["parent_scene_id"] is None
+
+    assert openingScene["from_choice_index"] is None
+
+    assert openingScene["choices"] == [
+        {"index": 0, "text": "Board the ship"},
+        {"index": 1, "text": "Follow the stranger"},
+
+    ]
+
+    workspaceAfterScene = client.get(f"/projects/{sceneTestProjectId}").json()
+
+    assert workspaceAfterScene["project"]["current_scene_id"] == openingScene["id"]
+
+    assert len(workspaceAfterScene["scenes"]) == 1
+
+    secondSceneResponse = client.post(f"/projects/{sceneTestProjectId}/scenes", json={})
+
+    assert secondSceneResponse.status_code == 400
+
+    assert secondSceneResponse.json()["error"] == "invalid_input"
+
+
