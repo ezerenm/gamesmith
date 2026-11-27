@@ -148,3 +148,36 @@ def buildOpeningScenePrompt(sceneStoryProject, castMembers):
     )
 
     return openingSceneInstructions
+
+def buildNextScenePrompt(nextSceneProject, nextSceneCast, previousSceneText, chosenActionText):
+
+    nextCastDescription = "There are no characters yet. You may invent minor characters for the story if it makes sense / needed.\n"
+
+    if len(nextSceneCast) > 0:
+
+        nextCastDescription = ""
+
+        for oneNextCastMember in nextSceneCast:
+
+            nextCastDescription = nextCastDescription + "- " + oneNextCastMember.name + " (" + oneNextCastMember.role + "): " + oneNextCastMember.backstory + "\n"
+
+    nextSceneInstructions = (
+        "You are a genius game writer continuing a branching story game.\n\n"
+        "Game title: " + nextSceneProject.title + "\n"
+        "Premise: " + nextSceneProject.premise + "\n"
+        "Genre: " + nextSceneProject.genre + "\n"
+        "Tone: " + nextSceneProject.tone + "\n"
+        "Setting: " + nextSceneProject.setting + "\n\n"
+        "Characters:\n" + nextCastDescription + "\n"
+        "What just happened:\n" + previousSceneText + "\n\n"
+        "The player chose to: " + chosenActionText + "\n\n"
+        "Rules:\n"
+        "- text: the next scene in 1 to 2 short paragraphs, written in second person (\"you\")\n"
+        "- you must start by showing what happened based on the player's choice\n"
+        "- characters have to be relevant, keep the characters and events consistent with what just occurred in the story so far\n"
+        "- end the scene at a moment where the player has to make a decision\n"
+        "- choices: exactly 2 different actions the player can take, each under 12 words\n"
+        
+    )
+
+    return nextSceneInstructions

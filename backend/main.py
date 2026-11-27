@@ -8,6 +8,7 @@ from .config import corsOrigins
 from .database import createTables, engine
 from .errors import registerErrorHandlers
 from .routers.projects import router as projectsRouter
+from .routers.scenes import router as scenesRouter
 
 
 @asynccontextmanager
@@ -28,6 +29,7 @@ app.add_middleware(
 )
 registerErrorHandlers(app)
 app.include_router(projectsRouter)
+app.include_router(scenesRouter)
 
 
 def apiSchema():

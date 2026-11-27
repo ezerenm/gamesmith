@@ -56,6 +56,12 @@ class CharacterListResponse(BaseModel):
     
     characters: list[CharacterResponse]
 
+class ContinueSceneRequest(BaseModel):
+
+    model_config = ConfigDict(extra="forbid")
+
+    choice_index: int
+
 class SceneChoiceResponse(BaseModel):
 
     index: int

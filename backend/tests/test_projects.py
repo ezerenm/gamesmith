@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from backend import crud, database, main
 
 from backend.routers import projects as projectsRouter
+from backend.routers import scenes as scenesRouter
 
 
 @pytest.fixture
@@ -217,5 +218,69 @@ def testOpeningSceneisSavedOnce(client, monkeypatch):
     assert secondSceneResponse.status_code == 400
 
     assert secondSceneResponse.json()["error"] == "invalid_input"
+
+def testContinueMakesChildandReusesIt(client, monkeypatch):
+
+    monkeypatch.setattr(projectsRouter, "generateJson", fakeSceneGenerator)
+
+    monkeypatch.setattr(scenesRouter, "generateJson", fakeSceneGenerator)
+
+    branchProjectId = client.post("/projects", json={"original_idea": "Pirates"}).json()["id"]
+
+    client.post(f"/projects/{branchProjectId}/concept", json={})
+
+    rootSceneId = client.post(f"/projects/{branchProjectId}/scenes", json={}).json()["id"]
+
+    leftChildResponse = client.post(f"/scenes/{rootSceneId}/continue", json={"choice_index": 0})
+
+    assert leftChildResponse.status_code == 200
+
+    leftChildScene = leftChildResponse.json()
+
+    assert leftChildScene["parent_scene_id"] == rootSceneId
+
+    assert leftChildScene["from_choice_index"] == 0
+
+    rightChildScene = client.post(f"/scenes/{rootSceneId}/continue", json={"choice_index": 1}).json()
+
+    assert rightChildScene["from_choice_index"] == 1
+
+    assert rightChildScene["id"] != leftChildScene["id"]
+
+    leftAgainScene = client.post(f"/scenes/{rootSceneId}/continue", json={"choice_index": 0}).json()
+
+    assert leftAgainScene["id"] == leftChildScene["id"]
+
+    branchWorkspace = client.get(f"/projects/{branchProjectId}").json()
+
+    assert len(branchWorkspace["scenes"]) == 3
+
+    assert branchWorkspace["project"]["current_scene_id"] == leftChildScene["id"]
+
+    assert branchWorkspace["scenes"][0]["selected_choice"] == 0
+
+def testContinueRejectsBadInput(client, monkeypatch):
+
+    monkeypatch.setattr(projectsRouter, "generateJson", fakeSceneGenerator)
+
+    badInputProjectId = client.post("/projects", json={"original_idea": "Pirates"}).json()["id"]
+
+    client.post(f"/projects/{badInputProjectId}/concept", json={})
+
+    badInputSceneId = client.post(f"/projects/{badInputProjectId}/scenes", json={}).json()["id"]
+
+    badChoiceResponse = client.post(f"/scenes/{badInputSceneId}/continue", json={"choice_index": 2})
+
+    assert badChoiceResponse.status_code == 400
+
+    assert badChoiceResponse.json()["error"] == "invalid_input"
+
+    missingSceneResponse = client.post("/scenes/999999/continue", json={"choice_index": 0})
+
+    assert missingSceneResponse.status_code == 404
+
+    assert missingSceneResponse.json()["error"] == "not_found"
+
+
 
 

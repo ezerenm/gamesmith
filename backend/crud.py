@@ -151,3 +151,91 @@ def saveOpeningScene(openingDbSession: Session, openingProject: Project, generat
         raise
     
     return openingSceneRow
+
+def getScene(sceneLookupDbSession: Session, lookupSceneId: int) -> Scene | None:
+
+    return sceneLookupDbSession.get(Scene, lookupSceneId)
+
+def findChildScene(childCheckDbSession: Session, childParentSceneId: int, childChoiceIndex: int) -> Scene | None:
+
+    childSceneQuery = (
+
+        select(Scene)
+        .where(Scene.parent_scene_id == childParentSceneId)
+        .where(Scene.from_choice_index == childChoiceIndex)
+
+    )
+
+    return childCheckDbSession.scalars(childSceneQuery).first()
+
+def moveToExistingChild(revisitDbSession: Session, revisitParentScene: Scene, revisitProject: Project, revisitChildScene: Scene, revisitChoiceIndex: int) -> Scene:
+
+    revisitParentScene.selected_choice = revisitChoiceIndex
+
+    revisitProject.current_scene_id = revisitChildScene.id
+
+    try:
+
+        revisitDbSession.commit()
+
+        revisitDbSession.refresh(revisitChildScene)
+
+    except Exception:
+
+        revisitDbSession.rollback()
+
+        raise
+        
+    return revisitChildScene
+    
+def saveChildScene(childDbSession: Session, childParentScene: Scene, childProject: Project, pickedChoiceIndex: int, generatedChildValues: dict) -> Scene:
+
+    childNumberedChoices = []
+
+    childChoiceNumber = 0
+
+    for oneChildChoiceText in generatedChildValues["choices"]:
+
+        childNumberedChoices.append({"index": childChoiceNumber, "text": oneChildChoiceText})
+
+        childChoiceNumber = childChoiceNumber + 1
+    
+    childSceneRow = Scene (
+
+        project_id=childProject.id,
+
+        parent_scene_id=childParentScene.id,
+
+        from_choice_index=pickedChoiceIndex,
+
+        text=generatedChildValues["text"],
+
+        choices=childNumberedChoices,
+
+        selected_choice=None,
+
+    )
+
+    try:
+
+        childDbSession.add(childSceneRow)
+
+        childDbSession.flush()
+
+        childParentScene.selected_choice = pickedChoiceIndex
+
+        childProject.current_scene_id = childSceneRow.id
+
+        childDbSession.commit()
+
+        childDbSession.refresh(childSceneRow)
+
+    except Exception:
+
+        childDbSession.rollback()
+
+        raise
+    
+    return childSceneRow
+
+    
