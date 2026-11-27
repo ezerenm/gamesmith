@@ -2,11 +2,13 @@ import json
 
 import time
 
+import httpx2
+
 from google import genai
 
 from google.genai import errors, types
 
-from .config import fallbackModelName, geminiApiKey, primaryModelName, retriesPerModel
+from .config import fallbackModelName, geminiApiKey, geminiTimeoutMilliseconds, primaryModelName, retriesPerModel
 
 from .errors import ApiError
 
@@ -18,7 +20,8 @@ def getGeminiClient():
     if cachedGeminiClient is None:
         if not geminiApiKey:
             raise ApiError(503, "generation_failed", "The AI service is not configured.")
-        cachedGeminiClient = genai.Client(api_key=geminiApiKey)
+        timeoutSettings = types.HttpOptions(timeout=geminiTimeoutMilliseconds)
+        cachedGeminiClient = genai.Client(api_key=geminiApiKey, http_options=timeoutSettings)
 
     return cachedGeminiClient
 
@@ -48,6 +51,12 @@ def askOneModel(modelNameToTry, promptForModel, schemaForModel):
             )
 
             return rawModelReply.text
+        
+        except httpx2.TimeoutException:
+            
+            print(modelNameToTry + " took too long to answer. Moving on to the next model...")
+
+            return None
 
         except errors.ServerError:
 
